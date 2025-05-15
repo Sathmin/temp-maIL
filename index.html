@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Temporary Email Generator | Sathmin OFC</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .gradient-bg {
+            background: linear-gradient(135deg, #6e8efb, #a777e3);
+        }
+        .email-box {
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+        }
+        .email-box:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15);
+        }
+        .message-item {
+            border-left: 4px solid #a777e3;
+            transition: all 0.2s ease;
+        }
+        .message-item:hover {
+            background-color: #f8f9fa;
+            transform: translateX(5px);
+        }
+        .copy-btn {
+            transition: all 0.2s ease;
+        }
+        .copy-btn:hover {
+            background-color: #4f46e5;
+        }
+        .privacy-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.5s ease;
+        }
+        .privacy-content.active {
+            max-height: 1000px;
+        }
+    </style>
+</head>
+<body class="bg-gray-50 font-sans">
+    <!-- Header -->
+    <header class="gradient-bg text-white">
+        <div class="container mx-auto px-4 py-6">
+            <div class="flex justify-between items-center">
+                <div class="flex items-center space-x-2">
+                    <i class="fas fa-envelope text-2xl"></i>
+                    <h1 class="text-2xl font-bold">TempMail<span class="text-yellow-300">Pro</span></h1>
+                </div>
+                <div class="text-sm">
+                    <span>by </span>
+                    <span class="font-bold">Sathmin OFC</span>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="container mx-auto px-4 py-8">
+        <!-- Hero Section -->
+        <section class="text-center mb-12">
+            <h2 class="text-4xl font-bold text-gray-800 mb-4">Generate Temporary Email Addresses</h2>
+            <p class="text-xl text-gray-600 max-w-2xl mx-auto">
+                Protect your privacy with our disposable email service. No registration required!
+            </p>
+        </section>
+
+        <!-- Email Generator -->
+        <section class="max-w-4xl mx-auto mb-16">
+            <div class="bg-white rounded-xl email-box p-8">
+                <div class="flex flex-col md:flex-row gap-4 mb-6">
+                    <div class="flex-1">
+                        <label for="domain" class="block text-sm font-medium text-gray-700 mb-2">Select Domain</label>
+                        <select id="domain" class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-purple-500 focus:border-purple-500">
+                            <option value="tempmailpro.com">@tempmailpro.com</option>
+                            <option value="mailinator.com">@mailinator.com</option>
+                            <option value="guerrillamail.com">@guerrillamail.com</option>
+                            <option value="10minutemail.com">@10minutemail.com</option>
+                        </select>
+                    </div>
+                    <div class="flex-1">
+                        <label for="username" class="block text-sm font-medium text-gray-700 mb-2">Username (optional)</label>
+                        <div class="flex">
+                            <input type="text" id="username" placeholder="random", class="flex-1 px-4 py-3 rounded-l-lg border border-gray-300 focus:ring-2 focus:ring-purple-500 focus:border-purple-500">
+                            <button id="generate-btn" class="bg-purple-600 text-white px-4 py-3 rounded-r-lg hover:bg-purple-700 transition">
+                                <i class="fas fa-random"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mb-6">
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Your Temporary Email</label>
+                    <div class="flex">
+                        <input type="text" id="temp-email" readonly class="flex-1 px-4 py-3 rounded-l-lg border border-gray-300 bg-gray-100 font-mono">
+                        <button id="copy-btn" class="copy-btn bg-purple-500 text-white px-4 py-3 rounded-r-lg hover:bg-purple-600 transition">
+                            <i class="fas fa-copy"></i> Copy
+                        </button>
+                    </div>
+                </div>
+
+                <div class="text-center">
+                    <button id="create-btn" class="gradient-bg text-white px-8 py-3 rounded-lg font-medium hover:opacity-90 transition">
+                        <i class="fas fa-envelope mr-2"></i> Create Temporary Email
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Inbox Section -->
+        <section class="max-w-4xl mx-auto mb-16">
+            <h3 class="text-2xl font-bold text-gray-800 mb-6 flex items-center">
+                <i class="fas fa-inbox mr-2"></i> Inbox
+            </h3>
+            <div class="bg-white rounded-xl shadow p-6">
+                <div class="flex justify-between items-center mb-4">
+                    <p id="email-display" class="font-mono text-purple-600"></p>
+                    <button id="refresh-btn" class="text-purple-600 hover:text-purple-800 transition">
+                        <i class="fas fa-sync-alt"></i> Refresh
+                    </button>
+                </div>
+                <div id="inbox-messages" class="space-y-3">
+                    <div class="text-center py-12 text-gray-500">
+                        <i class="fas fa-envelope-open-text text-4xl mb-4"></i>
+                        <p>Your inbox is empty</p>
+                        <p class="text-sm">Emails will appear here when received</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Features Section -->
+        <section class="max-w-6xl mx-auto mb-16">
+            <h3 class="text-2xl font-bold text-gray-800 mb-8 text-center">Why Use Our Service?</h3>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div class="bg-white p-6 rounded-xl shadow text-center">
+                    <div class="text-purple-500 mb-4">
+                        <i class="fas fa-shield-alt text-4xl"></i>
+                    </div>
+                    <h4 class="font-bold text-lg mb-2">Privacy Protection</h4>
+                    <p class="text-gray-600">Keep your personal email safe from spam and phishing attempts.</p>
+                </div>
+                <div class="bg-white p-6 rounded-xl shadow text-center">
+                    <div class="text-purple-500 mb-4">
+                        <i class="fas fa-clock text-4xl"></i>
+                    </div>
+                    <h4 class="font-bold text-lg mb-2">Time-Saving</h4>
+                    <p class="text-gray-600">No need to create accounts or remember passwords for temporary needs.</p>
+                </div>
+                <div class="bg-white p-6 rounded-xl shadow text-center">
+                    <div class="text-purple-500 mb-4">
+                        <i class="fas fa-lock text-4xl"></i>
+                    </div>
+                    <h4 class="font-bold text-lg mb-2">Secure</h4>
+                    <p class="text-gray-600">All emails are automatically deleted after 24 hours.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Contact Section -->
+        <section class="max-w-4xl mx-auto mb-16 bg-white rounded-xl shadow p-8">
+            <h3 class="text-2xl font-bold text-gray-800 mb-6 text-center">Contact Owner</h3>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div class="bg-purple-50 p-6 rounded-lg">
+                    <div class="flex items-center mb-4">
+                        <div class="bg-purple-100 p-3 rounded-full mr-4">
+                            <i class="fas fa-phone-alt text-purple-600"></i>
+                        </div>
+                        <div>
+                            <h4 class="font-bold">WhatsApp</h4>
+                            <p class="text-gray-600">+94 77 276 4500</p>
+                        </div>
+                    </div>
+                    <a href="https://wa.me/94772764500" class="block w-full bg-green-500 text-white py-2 px-4 rounded-lg text-center hover:bg-green-600 transition">
+                        <i class="fab fa-whatsapp mr-2"></i> Message on WhatsApp
+                    </a>
+                </div>
+                <div class="bg-blue-50 p-6 rounded-lg">
+                    <div class="flex items-center mb-4">
+                        <div class="bg-blue-100 p-3 rounded-full mr-4">
+                            <i class="fas fa-paper-plane text-blue-600"></i>
+                        </div>
+                        <div>
+                            <h4 class="font-bold">Telegram</h4>
+                            <p class="text-gray-600">+94 76 577 5266</p>
+                        </div>
+                    </div>
+                    <a href="https://t.me/+94765775266" class="block w-full bg-blue-500 text-white py-2 px-4 rounded-lg text-center hover:bg-blue-600 transition">
+                        <i class="fab fa-telegram mr-2"></i> Message on Telegram
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <!-- Privacy Policy Section -->
+        <section class="max-w-4xl mx-auto mb-16">
+            <div class="bg-white rounded-xl shadow overflow-hidden">
+                <button id="privacy-toggle" class="w-full text-left p-6 bg-gray-50 hover:bg-gray-100 transition flex justify-between items-center">
+                    <h3 class="text-xl font-bold text-gray-800">
+                        <i class="fas fa-lock mr-2"></i> Privacy Policy
+                    </h3>
+                    <i class="fas fa-chevron-down transition-transform duration-300"></i>
+                </button>
+                <div id="privacy-content" class="privacy-content p-6 border-t">
+                    <h4 class="font-bold text-lg mb-3">1. Information We Collect</h4>
+                    <p class="mb-4 text-gray-700">Our temporary email service does not require any personal information from users. We do not collect or store any personal data that could identify you.</p>
+                    
+                    <h4 class="font-bold text-lg mb-3">2. Email Content</h4>
+                    <p class="mb-4 text-gray-700">All emails received by our temporary email addresses are stored temporarily (for up to 24 hours) and are automatically deleted afterwards. We do not read or monitor the content of these emails.</p>
+                    
+                    <h4 class="font-bold text-lg mb-3">3. Cookies</h4>
+                    <p class="mb-4 text-gray-700">We may use session cookies to maintain your temporary email session, but these cookies are deleted when you close your browser.</p>
+                    
+                    <h4 class="font-bold text-lg mb-3">4. Third-Party Services</h4>
+                    <p class="mb-4 text-gray-700">We may use third-party analytics services to understand how our service is used. These services collect anonymous usage data.</p>
+                    
+                    <h4 class="font-bold text-lg mb-3">5. Changes to This Policy</h4>
+                    <p class="mb-4 text-gray-700">We may update our Privacy Policy from time to time. We will notify you of any changes by posting the new Privacy Policy on this page.</p>
+                    
+                    <h4 class="font-bold text-lg mb-3">6. Contact Us</h4>
+                    <p class="text-gray-700">If you have any questions about this Privacy Policy, please contact us via the contact information provided on this website.</p>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-gray-800 text-white py-8">
+        <div class="container mx-auto px-4">
+            <div class="flex flex-col md:flex-row justify-between items-center">
+                <div class="mb-4 md:mb-0">
+                    <div class="flex items-center space-x-2">
+                        <i class="fas fa-envelope text-xl"></i>
+                        <span class="text-xl font-bold">TempMail<span class="text-yellow-300">Pro</span></span>
+                    </div>
+                    <p class="text-gray-400 mt-2">A service by Sathmin OFC</p>
+                </div>
+                <div class="flex space-x-6">
+                    <a href="https://wa.me/94772764500" class="text-gray-400 hover:text-green-400 transition">
+                        <i class="fab fa-whatsapp text-2xl"></i>
+                    </a>
+                    <a href="https://t.me/+94765775266" class="text-gray-400 hover:text-blue-400 transition">
+                        <i class="fab fa-telegram text-2xl"></i>
+                    </a>
+                </div>
+            </div>
+            <div class="border-t border-gray-700 mt-8 pt-8 text-center text-gray-400">
+                <p>&copy; 2025 TempMailPro. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Generate random username
+        function generateRandomString(length) {
+            const chars = 'abcdefghijklmnopqrstuvwxyz0123456789';
+            let result = '';
+            for (let i = 0; i < length; i++) {
+                result += chars.charAt(Math.floor(Math.random() * chars.length));
+            }
+            return result;
+        }
+
+        // DOM elements
+        const generateBtn = document.getElementById('generate-btn');
+        const usernameInput = document.getElementById('username');
+        const domainSelect = document.getElementById('domain');
+        const tempEmailInput = document.getElementById('temp-email');
+        const copyBtn = document.getElementById('copy-btn');
+        const createBtn = document.getElementById('create-btn');
+        const emailDisplay = document.getElementById('email-display');
+        const refreshBtn = document.getElementById('refresh-btn');
+        const inboxMessages = document.getElementById('inbox-messages');
+        const privacyToggle = document.getElementById('privacy-toggle');
+        const privacyContent = document.getElementById('privacy-content');
+
+        // Generate random username
+        generateBtn.addEventListener('click', () => {
+            usernameInput.value = generateRandomString(10);
+            updateTempEmail();
+        });
+
+        // Update temp email when inputs change
+        function updateTempEmail() {
+            const username = usernameInput.value || generateRandomString(8);
+            const domain = domainSelect.value;
+            tempEmailInput.value = `${username}${domain ? `@${domain}` : ''}`;
+        }
+
+        usernameInput.addEventListener('input', updateTempEmail);
+        domainSelect.addEventListener('change', updateTempEmail);
+
+        // Copy email to clipboard
+        copyBtn.addEventListener('click', () => {
+            tempEmailInput.select();
+            document.execCommand('copy');
+            
+            // Change button text temporarily
+            const originalText = copyBtn.innerHTML;
+            copyBtn.innerHTML = '<i class="fas fa-check"></i> Copied!';
+            copyBtn.classList.remove('bg-purple-500');
+            copyBtn.classList.add('bg-green-500');
+            
+            setTimeout(() => {
+                copyBtn.innerHTML = originalText;
+                copyBtn.classList.remove('bg-green-500');
+                copyBtn.classList.add('bg-purple-500');
+            }, 2000);
+        });
+
+        // Create temp email
+        createBtn.addEventListener('click', () => {
+            if (!tempEmailInput.value) {
+                alert('Please generate an email address first');
+                return;
+            }
+            
+            emailDisplay.textContent = tempEmailInput.value;
+            
+            // Simulate receiving emails (in a real app, this would be an API call)
+            setTimeout(() => {
+                inboxMessages.innerHTML = `
+                    <div class="message-item bg-white p-4 rounded-lg shadow-sm cursor-pointer">
+                        <div class="flex justify-between items-start mb-2">
+                            <h4 class="font-bold text-purple-600">Welcome to TempMailPro</h4>
+                            <span class="text-xs text-gray-500">Just now</span>
+                        </div>
+                        <p class="text-sm text-gray-600 truncate">Thank you for using our temporary email service. Your email address is active for 24 hours.</p>
+                    </div>
+                    <div class="message-item bg-white p-4 rounded-lg shadow-sm cursor-pointer">
+                        <div class="flex justify-between items-start mb-2">
+                            <h4 class="font-bold text-purple-600">Security Notice</h4>
+                            <span class="text-xs text-gray-500">1 min ago</span>
+                        </div>
+                        <p class="text-sm text-gray-600 truncate">Remember that all emails will be automatically deleted after 24 hours for your privacy.</p>
+                    </div>
+                `;
+            }, 1000);
+        });
+
+        // Refresh inbox
+        refreshBtn.addEventListener('click', () => {
+            if (!emailDisplay.textContent) {
+                alert('Please create an email address first');
+                return;
+            }
+            
+            // Simulate checking for new emails
+            inboxMessages.insertAdjacentHTML('afterbegin', `
+                <div class="message-item bg-white p-4 rounded-lg shadow-sm cursor-pointer">
+                    <div class="flex justify-between items-start mb-2">
+                        <h4 class="font-bold text-purple-600">New Update Available</h4>
+                        <span class="text-xs text-gray-500">Now</span>
+                    </div>
+                    <p class="text-sm text-gray-600 truncate">We've improved our service with faster email delivery and better security.</p>
+                </div>
+            `);
+        });
+
+        // Toggle privacy policy
+        privacyToggle.addEventListener('click', () => {
+            privacyContent.classList.toggle('active');
+            const icon = privacyToggle.querySelector('i.fa-chevron-down');
+            icon.classList.toggle('transform');
+            icon.classList.toggle('rotate-180');
+        });
+
+        // Initialize with a random email
+        updateTempEmail();
+    </script>
+</body>
+</html>
